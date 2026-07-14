@@ -36,29 +36,7 @@ const FILTERS = {
   ]
 };
 
-// function filterJobs(jobs) {
-// export function filterJobs(jobs) {
-//   return jobs.filter(job => {
 
-//     const title =
-//       (job.title || "").toLowerCase();
-
-//     const location =
-//       (job.location || "").toLowerCase();
-
-//     const roleMatch =
-//       FILTERS.roles.some(role =>
-//         title.includes(role)
-//       );
-
-//     const locationMatch =
-//       FILTERS.locations.some(city =>
-//         location.includes(city)
-//       );
-
-//     return roleMatch && locationMatch;
-//   });
-// }
 
 import {
   normalizeTitle,

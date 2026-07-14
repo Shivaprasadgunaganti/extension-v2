@@ -56,40 +56,6 @@ function collectJobs() {
   sendJobs(jobs);
 }
 
-// function getSearchContext() {
-//   const params = new URLSearchParams(location.search);
-
-//   return {
-//     role: params.get("q") || "",
-//     location: params.get("location") || "",
-//   };
-// }
-
-// function getSearchContext() {
-//   const params = new URLSearchParams(location.search);
-
-//   let role = params.get("q") || "";
-//   let location = params.get("location") || "";
-
-//   // Fallback to URL path
-//   if (!role || !location) {
-//     const path = location.pathname.toLowerCase();
-
-//     if (path.includes("react-developer")) {
-//       role = "React Developer";
-//     }
-
-//     if (path.includes("hyderabad")) {
-//       location = "Hyderabad";
-//     }
-//   }
-
-//   return {
-//     role,
-//     location,
-//   };
-// }
-
 function getSearchContext() {
   const params = new URLSearchParams(window.location.search);
 
@@ -134,20 +100,49 @@ function sendJobs(jobs) {
   }
 }
 
+// function waitForJobs() {
+//   const interval = setInterval(() => {
+//     const count = document.querySelectorAll("[data-job-id]").length;
+
+//     console.log(`⏳ Waiting for jobs... (${count})`);
+
+//     if (count > 0) {
+//       clearInterval(interval);
+
+//       console.log(`✅ Found ${count} jobs`);
+
+//       collectJobs();
+//     }
+//   }, 300);
+// }
+
 function waitForJobs() {
-  const interval = setInterval(() => {
-    const count = document.querySelectorAll("[data-job-id]").length;
+  console.log("👀 Watching for Naukri jobs...");
 
-    console.log(`⏳ Waiting for jobs... (${count})`);
+  const observer = new MutationObserver(() => {
+    const cards = document.querySelectorAll("[data-job-id]");
 
-    if (count > 0) {
-      clearInterval(interval);
+    console.log(`Observed cards: ${cards.length}`);
 
-      console.log(`✅ Found ${count} jobs`);
+    if (cards.length > 0) {
+      observer.disconnect();
+
+      console.log("✅ Jobs appeared!");
 
       collectJobs();
     }
-  }, 300);
+  });
+
+  observer.observe(document.body, {
+    childList: true,
+    subtree: true,
+  });
+
+  // Safety timeout
+  setTimeout(() => {
+    observer.disconnect();
+    console.log("⌛ Observer timed out after 20 seconds");
+  }, 20000);
 }
 
 function init() {
