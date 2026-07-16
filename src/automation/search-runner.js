@@ -22,10 +22,6 @@ export function startSearchQueue() {
 }
 
 function openNextSearch() {
-  //   if (currentIndex >= queue.length) {
-  //     console.log("🎉 Search Queue Finished");
-  //     return;
-  //   }
   if (currentIndex >= queue.length) {
     console.log("🎉 Search Queue Finished");
 
@@ -37,10 +33,6 @@ function openNextSearch() {
   }
 
   const search = queue[currentIndex];
-
-  console.log(`🌐 Opening ${search.source}: ${search.role}`);
-  console.log(`🌐 Opening ${search.source}: ${search.role}`);
-console.log("URL:", search.url);
 
   chrome.tabs.create(
     {

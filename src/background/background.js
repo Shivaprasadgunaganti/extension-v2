@@ -2,13 +2,7 @@
 
 import { filterJobs } from "../shared/filter-engine.js";
 import { addUniqueJobs } from "../shared/deduplication-engine.js";
-// import { saveCollectionRun } from "./repository/collection-run-repository.js";
-import { saveCollectionRun } from "../repository/collection-run-repository.js"
-// import { runSearches } from "../automation/search-runner.js";
-// import {
-//   startSearchQueue,
-//   finishCurrentSearch,
-// } from "../automation/search-runner.js";
+import { saveCollectionRun } from "../repository/collection-run-repository.js";
 
 import { startScheduler, registerScheduler } from "../automation/scheduler.js";
 
@@ -17,7 +11,6 @@ import {
   finishCurrentSearch,
   // } from "./automation/search-runner.js";
 } from "../automation/search-runner.js";
-// import { saveJobs } from "../repository/jobs-repository.js";
 import { saveJobs } from "../repository/jobs-repository.js";
 
 console.log("🚀 Attention Needed Background Started");
@@ -79,88 +72,47 @@ chrome.runtime.onMessage.addListener(async (message) => {
       console.log("================================");
       break;
 
-    // case "JOBS_COLLECTED": {
-    //   console.log("📥 Jobs Received");
-
-    //   console.log("🔍 Search Context");
-    //   console.table(message.search);
-
-    //   const filteredJobs = filterJobs(message.jobs);
-
-    //   console.log(
-    //     `✅ ${filteredJobs.length} of ${message.jobs.length} jobs matched`,
-    //   );
-
-    //   const { newJobs, totalJobs } = addUniqueJobs(filteredJobs);
-
-    //   await saveJobs(newJobs, message.search);
-
-    //   console.log(`🆕 ${newJobs.length} new jobs added`);
-
-    //   console.log(`🌍 Global Pool: ${totalJobs.length} unique jobs`);
-
-    //   console.table(totalJobs);
-
-    //   break;
-    // }
-
     case "JOBS_COLLECTED": {
-      console.log("📥 Jobs Received");
-
-      console.log("🔍 Search Context");
-      console.table(message.search);
-
       const filteredJobs = filterJobs(message.jobs);
-
-      console.log(
-        `✅ ${filteredJobs.length} of ${message.jobs.length} jobs matched`,
-      );
 
       const { newJobs, totalJobs } = addUniqueJobs(filteredJobs);
 
-      runStats.totalJobs += message.jobs.length;
-      runStats.matchedJobs += filteredJobs.length;
-      runStats.newJobs += newJobs.length;
+      console.log("Lengths:", {
+        filtered: filteredJobs.length,
+        newJobs: newJobs.length,
+        totalJobs: totalJobs.length,
+      });
+
+      // await saveJobs(newJobs, message.search);
+      console.log("Search Context:");
+      console.log(message.search);
 
       await saveJobs(newJobs, message.search);
-
-      console.log(`🆕 ${newJobs.length} new jobs added`);
-
-      console.log(`🌍 Global Pool: ${totalJobs.length} unique jobs`);
-
-      console.table(totalJobs);
 
       break;
     }
 
-    // case "COLLECTION_FINISHED":
-    //   console.log(`✅ ${message.source} collection finished`);
-
-    //   finishCurrentSearch();
-
-    //   break;
-
     case "COLLECTION_FINISHED": {
-  console.log(`✅ ${message.source} collection finished`);
+      console.log(`✅ ${message.source} collection finished`);
 
-  const queueFinished = finishCurrentSearch();
+      const queueFinished = finishCurrentSearch();
 
-  if (queueFinished) {
-    console.log("📊 Saving Collection Run...");
+      if (queueFinished) {
+        console.log("📊 Saving Collection Run...");
 
-    await saveCollectionRun({
-      started_at: runStartedAt.toISOString(),
-      finished_at: new Date().toISOString(),
-      source_count: 2,
-      total_jobs: runStats.totalJobs,
-      matched_jobs: runStats.matchedJobs,
-      new_jobs: runStats.newJobs,
-      status: "SUCCESS",
-    });
-  }
+        await saveCollectionRun({
+          started_at: runStartedAt.toISOString(),
+          finished_at: new Date().toISOString(),
+          source_count: 2,
+          total_jobs: runStats.totalJobs,
+          matched_jobs: runStats.matchedJobs,
+          new_jobs: runStats.newJobs,
+          status: "SUCCESS",
+        });
+      }
 
-  break;
-}
+      break;
+    }
 
     default:
       console.log("Unknown message:", message.type);

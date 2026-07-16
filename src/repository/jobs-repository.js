@@ -1,44 +1,58 @@
-// export function saveJobs(jobs) {
-//   console.log(`💾 Repository received ${jobs.length} jobs`);
-//   return jobs;
-// }
-
 import { supabase } from "../supabase.js";
 
 export async function saveJobs(jobs, search) {
-  if (!jobs.length) return;
+  console.log("🔥 VERSION CHECK 123");
 
-  const rows = jobs.map((job) => ({
-    job_key: job.job_key,
-    source: job.source,
-    title: job.title,
-    company: job.company,
-    location: job.location,
-    url: job.url,
-    role: search.role,
-    search_location: search.location,
-    collected_at: new Date().toISOString(),
-  }));
+  try {
+    console.log("Jobs:", jobs);
+    console.log("Search:", search);
 
-  const { data, error } = await supabase.from("jobs").upsert(rows, {
-    onConflict: "job_key",
-  });
+    if (!jobs.length) {
+      console.log("No jobs");
+      return;
+    }
 
-  //   if (error) {
-  //     console.error("❌ Supabase Error", error);
-  //     return;
-  //   }
+    console.log("Search received in saveJobs:");
+    console.log(search);
 
-  if (error) {
-    console.error("❌ Supabase Error");
-    console.error("Code:", error.code);
-    console.error("Message:", error.message);
-    console.error("Details:", error.details);
-    console.error("Hint:", error.hint);
-    console.error(error);
+    const rows = jobs.map((job) => ({
+      job_key: job.job_key,
+      source: job.source,
+      title: job.title,
+      company: job.company,
+      location: job.location,
+      url: job.url,
+      role: search.role,
+      search_location: search.location,
+      collected_at: new Date().toISOString(),
+    }));
 
-    return;
+    console.table(rows);
+
+    // const rows = jobs.map((job) => ({
+    //   job_key: job.job_key,
+    //   source: job.source,
+    //   title: job.title,
+    //   company: job.company,
+    //   location: job.location,
+    //   url: job.url,
+
+    //   role: search?.role ?? "",
+    //   search_location: search?.location ?? "",
+
+    //   collected_at: new Date().toISOString(),
+    // }));
+
+    // console.table(rows);
+
+    
+    const result = await supabase
+      .from("jobs")
+      .upsert(rows, { onConflict: "job_key" })
+      .select();
+  } catch (e) {
+    console.error("SAVE JOBS ERROR");
+    console.error(e);
+    console.error(e.stack);
   }
-
-  console.log(`✅ Saved ${rows.length} jobs to Supabase`);
 }

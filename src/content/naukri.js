@@ -100,50 +100,50 @@ function sendJobs(jobs) {
   }
 }
 
-// function waitForJobs() {
-//   const interval = setInterval(() => {
-//     const count = document.querySelectorAll("[data-job-id]").length;
-
-//     console.log(`⏳ Waiting for jobs... (${count})`);
-
-//     if (count > 0) {
-//       clearInterval(interval);
-
-//       console.log(`✅ Found ${count} jobs`);
-
-//       collectJobs();
-//     }
-//   }, 300);
-// }
-
 function waitForJobs() {
-  console.log("👀 Watching for Naukri jobs...");
+  const interval = setInterval(() => {
+    const count = document.querySelectorAll("[data-job-id]").length;
 
-  const observer = new MutationObserver(() => {
-    const cards = document.querySelectorAll("[data-job-id]");
+    console.log(`⏳ Waiting for jobs... (${count})`);
 
-    console.log(`Observed cards: ${cards.length}`);
+    if (count > 0) {
+      clearInterval(interval);
 
-    if (cards.length > 0) {
-      observer.disconnect();
-
-      console.log("✅ Jobs appeared!");
+      console.log(`✅ Found ${count} jobs`);
 
       collectJobs();
     }
-  });
-
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true,
-  });
-
-  // Safety timeout
-  setTimeout(() => {
-    observer.disconnect();
-    console.log("⌛ Observer timed out after 20 seconds");
-  }, 20000);
+  }, 300);
 }
+
+// function waitForJobs() {
+//   console.log("👀 Watching for Naukri jobs...");
+
+//   const observer = new MutationObserver(() => {
+//     const cards = document.querySelectorAll("[data-job-id]");
+
+//     console.log(`Observed cards: ${cards.length}`);
+
+//     if (cards.length > 0) {
+//       observer.disconnect();
+
+//       console.log("✅ Jobs appeared!");
+
+//       collectJobs();
+//     }
+//   });
+
+//   observer.observe(document.body, {
+//     childList: true,
+//     subtree: true,
+//   });
+
+//   // Safety timeout
+//   setTimeout(() => {
+//     observer.disconnect();
+//     console.log("⌛ Observer timed out after 20 seconds");
+//   }, 20000);
+// }
 
 function init() {
   console.log("🚀 Starting Naukri Collector...");

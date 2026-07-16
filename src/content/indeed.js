@@ -21,13 +21,21 @@ function extractJob(card) {
 
   const url = href ? new URL(href, window.location.origin).href : "";
 
+  // return {
+  //   source: "indeed",
+  //   title,
+  //   company,
+  //   location,
+  //   url,
+  // };
   return {
-    source: "indeed",
-    title,
-    company,
-    location,
-    url,
-  };
+  title,
+  company,
+  location,
+  url,
+  role,
+  search_location
+}
 }
 
 function collectJobs() {
@@ -64,22 +72,6 @@ function getSearchContext() {
     location: document.querySelector('input[name="l"]')?.value.trim() || "",
   };
 }
-
-// function sendJobs(jobs) {
-//   try {
-//     chrome.runtime.sendMessage({
-//       type: "JOBS_COLLECTED",
-//       source: "indeed",
-//       search: getSearchContext(),
-//       jobs: jobs,
-     
-//     });
-
-//     console.log(`📤 Sent ${jobs.length} jobs to background`);
-//   } catch (err) {
-//     console.error("❌ SendMessage Error:", err);
-//   }
-// }
 
 function sendJobs(jobs) {
   try {
