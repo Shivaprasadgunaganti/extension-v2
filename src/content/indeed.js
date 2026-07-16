@@ -21,21 +21,21 @@ function extractJob(card) {
 
   const url = href ? new URL(href, window.location.origin).href : "";
 
-  // return {
-  //   source: "indeed",
-  //   title,
-  //   company,
-  //   location,
-  //   url,
-  // };
   return {
-  title,
-  company,
-  location,
-  url,
-  role,
-  search_location
-}
+    source: "indeed",
+    title,
+    company,
+    location,
+    url,
+  };
+//   return {
+//   title,
+//   company,
+//   location,
+//   url,
+//   role,
+//   search_location
+// }
 }
 
 function collectJobs() {
