@@ -1,4 +1,5 @@
 import { supabase } from "../supabase.js";
+import { analyzeJob } from "../pipeline/intelligence/engine.js";
 
 export async function saveJobs(jobs, search) {
   console.log("🔥 VERSION CHECK 123");
@@ -15,20 +16,6 @@ export async function saveJobs(jobs, search) {
     console.log("Search received in saveJobs:");
     console.log(search);
 
-    const rows = jobs.map((job) => ({
-      job_key: job.job_key,
-      source: job.source,
-      title: job.title,
-      company: job.company,
-      location: job.location,
-      url: job.url,
-      role: search.role,
-      search_location: search.location,
-      collected_at: new Date().toISOString(),
-    }));
-
-    console.table(rows);
-
     // const rows = jobs.map((job) => ({
     //   job_key: job.job_key,
     //   source: job.source,
@@ -36,16 +23,51 @@ export async function saveJobs(jobs, search) {
     //   company: job.company,
     //   location: job.location,
     //   url: job.url,
-
-    //   role: search?.role ?? "",
-    //   search_location: search?.location ?? "",
-
+    //   role: search.role,
+    //   search_location: search.location,
     //   collected_at: new Date().toISOString(),
     // }));
 
-    // console.table(rows);
+    const rows = jobs.map((job) => {
+      const analysis = analyzeJob(job);
 
-    
+      return {
+        job_key: job.job_key,
+
+        source: job.source,
+
+        title: job.title,
+
+        company: job.company,
+
+        location: job.location,
+
+        url: job.url,
+
+        role: search.role,
+
+        search_location: search.location,
+
+        collected_at: new Date().toISOString(),
+
+        // Intelligence
+
+        match_score: analysis.score,
+
+        priority: analysis.priority,
+
+        matched_skills: analysis.matchedSkills,
+
+        missing_skills: analysis.missingSkills,
+
+        extracted_skills: analysis.extractedSkills,
+
+        score_breakdown: analysis.breakdown,
+      };
+    });
+
+    console.table(rows);
+
     const result = await supabase
       .from("jobs")
       .upsert(rows, { onConflict: "job_key" })

@@ -1,6 +1,6 @@
 export function startScheduler() {
   chrome.alarms.create("jobCollector", {
-    periodInMinutes: 1, // Development only
+    periodInMinutes: 60, // Development only
   });
 
   console.log("⏰ Scheduler Started");
