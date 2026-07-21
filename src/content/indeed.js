@@ -27,6 +27,7 @@ function extractJob(card) {
     company,
     location,
     url,
+    apply_type: "UNKNOWN",
   };
 //   return {
 //   title,

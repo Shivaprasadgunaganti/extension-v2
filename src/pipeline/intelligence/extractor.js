@@ -17,5 +17,5 @@ export function extractSkills(job) {
     }
   }
 
-  return [...extracted];
+  return [...extracted];  
 }

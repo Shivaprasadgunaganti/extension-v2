@@ -1,7 +1,6 @@
-
 export const WEIGHTS = {
-  ROLE: 0.30,
-  LOCATION: 0.20,
+  ROLE: 0.3,
+  LOCATION: 0.2,
   PRIMARY_SKILLS: 0.35,
   SECONDARY_SKILLS: 0.15,
 };
@@ -11,3 +10,5 @@ export const PRIORITY = {
   MEDIUM: "MEDIUM",
   LOW: "LOW",
 };
+
+export const APPLY_THRESHOLD = 85;
